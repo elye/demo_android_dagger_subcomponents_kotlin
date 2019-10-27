@@ -4,10 +4,9 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
-import javax.inject.Singleton
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Scope
+import javax.inject.Singleton
 
 class Data(private val code: Int, private val message: String) {
     override fun toString(): String {
