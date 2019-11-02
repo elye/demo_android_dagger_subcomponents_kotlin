@@ -1,4 +1,4 @@
-package com.elyeproj.daggertwomultibindings;
+package com.elyeproj.daggertwosubcomponent;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package com.elyeproj.daggertwomultibindings.subcomponentthroughcomponent
+package com.elyeproj.daggertwosubcomponent.subcomponentthroughcomponent
 
 import dagger.BindsInstance
 import dagger.Component
