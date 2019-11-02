@@ -1,5 +1,6 @@
 package com.elyeproj.daggertwomultibindings.subcomponentthroughcomponent
 
+import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -8,15 +9,11 @@ import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 
-class Data(private val code: Int, private val message: String) {
-    override fun toString(): String {
-        return "$code: $message"
-    }
-}
+data class Data(private val content: String)
 
-class RequestHandler {
-    fun writeResponse(data: Data) {
-        println(data)
+class RequestHandler(private val data: Data) {
+    fun writeResponse(code: Int, message: String) {
+        println("$code $message $data")
     }
 }
 
@@ -24,15 +21,17 @@ class RequestHandler {
 class RequestRouter @Inject constructor(private val requestComponentProvider: Provider<RequestComponent.Builder>) {
     fun dataReceived(data: Data) {
         val requestComponent = requestComponentProvider.get()
+            .requestModule(RequestModule())
+            .data(data)
             .build()
-        requestComponent.requestHandler.writeResponse(data)
+        requestComponent.requestHandler.writeResponse(200, "Hello")
     }
 }
 
 @Module
 class RequestModule {
     @Provides
-    fun getRequestHandler() = RequestHandler()
+    fun getRequestHandler(data: Data) = RequestHandler(data)
 }
 
 @Subcomponent(modules = [RequestModule::class])
@@ -41,6 +40,9 @@ interface RequestComponent {
 
     @Subcomponent.Builder
     interface Builder {
+        @BindsInstance
+        fun data(data: Data): Builder
+        fun requestModule(requestModule: RequestModule): Builder
         fun build(): RequestComponent
     }
 }
@@ -54,6 +56,6 @@ interface ServerComponent {
 
 fun main() {
     val a = DaggerServerComponent.create().requestRouter
-    a.dataReceived(Data(200, "My Message"))
-    a.dataReceived(Data(400, "Your Message"))
+    a.dataReceived(Data("My Data"))
+    a.dataReceived(Data("Your Data"))
 }
