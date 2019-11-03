@@ -1,4 +1,4 @@
-package com.elyeproj.daggertwosubcomponent.subcomponentthroughmodule
+package com.elyeproj.daggertwosubcomponent.subcomponentdeclaration.throughcomponent
 
 import dagger.BindsInstance
 import dagger.Component
@@ -48,13 +48,11 @@ interface RequestComponent {
 }
 
 @Singleton
-@Component(modules = [ServerModule::class])
+@Component
 interface ServerComponent {
     val requestRouter: RequestRouter
+    val requestComponentBuilder: RequestComponent.Builder
 }
-
-@Module(subcomponents = [RequestComponent::class])
-class ServerModule
 
 fun main() {
     val a = DaggerServerComponent.create().requestRouter
